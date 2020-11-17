@@ -1,24 +1,26 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState } from 'react'
+import axios from 'axios'
 
-function App() {
+const baseUrl = process.env.NODE_ENV === 'development' ?
+      'http://localhost:8010/proxy':
+      'https://api.thegamesdb.net'
+
+const key = `?apikey=${process.env.REACT_APP_API_KEY}`
+const id = `&id=69989` //total entries?
+
+const App = () => {
+  const [game, setGame] = useState()
+  const handleClick = async () => {
+    const res = await axios.get(`${baseUrl}/v1/Games/ByGameID${key}${id}`)
+    console.log(res.data.data)
+    setGame(res.data.data.games[0])
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className="App">
+      <button type="button" onClick={handleClick}>Click Me!</button>
+      <div>{game?.game_title}</div>
+      </div>
   );
 }
 
